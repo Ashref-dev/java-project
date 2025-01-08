@@ -11,7 +11,10 @@ src/
         └── com/
             └── javaprojectplane/
                 └── cli/
-                    └── Main.java
+                    ├── Main.java
+                    ├── Plane.java
+                    ├── Pilot.java
+                    └── Passenger.java
 ```
 
 
@@ -56,7 +59,11 @@ Plane Management System:
 3. Plane-Pilot Assignment
    a. Assign Pilot to Plane
    b. View Plane's Pilot
-4. Exit
+4. Manage Passengers
+   a. Add Passenger to Plane
+   b. View Plane's Passengers
+   c. Remove Passenger from Plane
+5. Exit
 ```
 
 ---
@@ -65,16 +72,21 @@ Plane Management System:
 
 #### Objects:
 1. **`Plane` Class**:
-   - Fields: `id`, `model`, `registrationNumber`, `pilotId`.
-   - Methods: Getters/Setters, `toString`.
+   - Fields: `id`, `model`, `registrationNumber`, `pilotId`, `passengers[]`, `passengerCount`
+   - Methods: Getters/Setters, `toString`, `addPassenger`, `removePassenger`, `getPassengers`
 
 2. **`Pilot` Class**:
-   - Fields: `id`, `name`, `licenseNumber`.
-   - Methods: Getters/Setters, `toString`.
+   - Fields: `id`, `name`, `licenseNumber`
+   - Methods: Getters/Setters, `toString`
+
+3. **`Passenger` Class**:
+   - Fields: `id`, `name`, `passportNumber`, `seatNumber`
+   - Methods: Getters/Setters, `toString`
 
 #### Data Storage:
-- Use arrays to store `Plane` and `Pilot` objects.
-- Operations such as add, search, and delete will directly manipulate these arrays.
+- Use arrays to store `Plane` and `Pilot` objects
+- Each `Plane` object maintains its own array of `Passenger` objects
+- Operations such as add, search, and delete will directly manipulate these arrays
 
 ---
 
