@@ -1,9 +1,13 @@
 package com.javaprojectplane.cli;
 
-import java.util.Scanner;
+import com.javaprojectplane.cli.validation.Validator;
+import com.javaprojectplane.cli.exceptions.ValidationException;
+import com.javaprojectplane.cli.ui.ConsoleMenu;
+import com.javaprojectplane.cli.factory.TransportFactory;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
-    private static final Scanner scanner = new Scanner(System.in);
     private static final int MAX_PLANES = 100;
     private static final int MAX_PILOTS = 100;
     private static Plane[] planes = new Plane[MAX_PLANES];
@@ -11,212 +15,223 @@ public class Main {
     private static int planeCount = 0;
     private static int pilotCount = 0;
     private static int nextPassengerId = 1;
+    private static final ConsoleMenu menu = ConsoleMenu.getInstance();
 
     public static void main(String[] args) {
+        menu.showWelcomeScreen();
+        
         while (true) {
-            displayMainMenu();
-            int choice = getUserChoice();
+            List<String> mainOptions = Arrays.asList(
+                "Manage Planes",
+                "Manage Pilots",
+                "Plane-Pilot Assignment",
+                "Manage Passengers",
+                "Exit"
+            );
+
+            int choice = menu.showMenu("Plane Management System", mainOptions);
             
             switch (choice) {
-                case 1:
+                case 0:
                     managePlanes();
                     break;
-                case 2:
+                case 1:
                     managePilots();
                     break;
-                case 3:
+                case 2:
                     managePlanePilotAssignment();
                     break;
-                case 4:
+                case 3:
                     managePassengers();
                     break;
-                case 5:
-                    System.out.println("Exiting...");
-                    scanner.close();
+                case 4:
+                case -1:
+                    menu.showMessage("Exiting...");
                     return;
-                default:
-                    System.out.println("Invalid option! Please try again.");
             }
         }
     }
 
-    private static void displayMainMenu() {
-        System.out.println("\n=== Plane Management System ===");
-        System.out.println("1. Manage Planes");
-        System.out.println("2. Manage Pilots");
-        System.out.println("3. Plane-Pilot Assignment");
-        System.out.println("4. Manage Passengers");
-        System.out.println("5. Exit");
-        System.out.print("Enter your choice: ");
-    }
-
     private static void managePlanes() {
         while (true) {
-            System.out.println("\n=== Manage Planes ===");
-            System.out.println("a. Add Plane");
-            System.out.println("b. View All Planes");
-            System.out.println("c. Search for a Plane");
-            System.out.println("d. Delete a Plane");
-            System.out.println("e. Back to Main Menu");
-            System.out.print("Enter your choice: ");
+            List<String> options = Arrays.asList(
+                "Add Plane",
+                "View All Planes",
+                "Search for a Plane",
+                "Delete a Plane",
+                "Back to Main Menu"
+            );
 
-            String choice = scanner.nextLine().toLowerCase();
+            int choice = menu.showMenu("Manage Planes", options);
+            
             switch (choice) {
-                case "a":
+                case 0:
                     addPlane();
                     break;
-                case "b":
+                case 1:
                     viewAllPlanes();
                     break;
-                case "c":
+                case 2:
                     searchPlane();
                     break;
-                case "d":
+                case 3:
                     deletePlane();
                     break;
-                case "e":
+                case 4:
+                case -1:
                     return;
-                default:
-                    System.out.println("Invalid option! Please try again.");
             }
         }
     }
 
     private static void managePilots() {
         while (true) {
-            System.out.println("\n=== Manage Pilots ===");
-            System.out.println("a. Add Pilot");
-            System.out.println("b. View All Pilots");
-            System.out.println("c. Search for a Pilot");
-            System.out.println("d. Delete a Pilot");
-            System.out.println("e. Back to Main Menu");
-            System.out.print("Enter your choice: ");
+            List<String> options = Arrays.asList(
+                "Add Pilot",
+                "View All Pilots",
+                "Search for a Pilot",
+                "Delete a Pilot",
+                "Back to Main Menu"
+            );
 
-            String choice = scanner.nextLine().toLowerCase();
+            int choice = menu.showMenu("Manage Pilots", options);
+            
             switch (choice) {
-                case "a":
+                case 0:
                     addPilot();
                     break;
-                case "b":
+                case 1:
                     viewAllPilots();
                     break;
-                case "c":
+                case 2:
                     searchPilot();
                     break;
-                case "d":
+                case 3:
                     deletePilot();
                     break;
-                case "e":
+                case 4:
+                case -1:
                     return;
-                default:
-                    System.out.println("Invalid option! Please try again.");
             }
         }
     }
 
     private static void managePlanePilotAssignment() {
         while (true) {
-            System.out.println("\n=== Plane-Pilot Assignment ===");
-            System.out.println("a. Assign Pilot to Plane");
-            System.out.println("b. View Plane's Pilot");
-            System.out.println("c. Back to Main Menu");
-            System.out.print("Enter your choice: ");
+            List<String> options = Arrays.asList(
+                "Assign Pilot to Plane",
+                "View Plane's Pilot",
+                "Back to Main Menu"
+            );
 
-            String choice = scanner.nextLine().toLowerCase();
+            int choice = menu.showMenu("Plane-Pilot Assignment", options);
+            
             switch (choice) {
-                case "a":
+                case 0:
                     assignPilotToPlane();
                     break;
-                case "b":
+                case 1:
                     viewPlanePilot();
                     break;
-                case "c":
+                case 2:
+                case -1:
                     return;
-                default:
-                    System.out.println("Invalid option! Please try again.");
             }
         }
     }
 
     private static void managePassengers() {
         while (true) {
-            System.out.println("\n=== Manage Passengers ===");
-            System.out.println("a. Add Passenger to Plane");
-            System.out.println("b. View Plane's Passengers");
-            System.out.println("c. Remove Passenger from Plane");
-            System.out.println("d. Back to Main Menu");
-            System.out.print("Enter your choice: ");
+            List<String> options = Arrays.asList(
+                "Add Passenger to Plane",
+                "View Plane's Passengers",
+                "Remove Passenger from Plane",
+                "Back to Main Menu"
+            );
 
-            String choice = scanner.nextLine().toLowerCase();
+            int choice = menu.showMenu("Manage Passengers", options);
+            
             switch (choice) {
-                case "a":
+                case 0:
                     addPassengerToPlane();
                     break;
-                case "b":
+                case 1:
                     viewPlanePassengers();
                     break;
-                case "c":
+                case 2:
                     removePassengerFromPlane();
                     break;
-                case "d":
+                case 3:
+                case -1:
                     return;
-                default:
-                    System.out.println("Invalid option! Please try again.");
             }
         }
     }
 
-    // Plane management methods
     private static void addPlane() {
         if (planeCount >= MAX_PLANES) {
-            System.out.println("Maximum number of planes reached!");
+            menu.showMessage("Maximum number of planes reached!");
             return;
         }
 
-        System.out.print("Enter plane model: ");
-        String model = scanner.nextLine();
-        System.out.print("Enter registration number: ");
-        String regNumber = scanner.nextLine();
+        try {
+            String model = menu.readInput("Enter plane model: ");
+            Validator.validateName(model);
 
-        planes[planeCount] = new Plane(planeCount + 1, model, regNumber);
-        planeCount++;
-        System.out.println("Plane added successfully!");
+            String regNumber = menu.readInput("Enter registration number: ");
+            Validator.validateRegistrationNumber(regNumber);
+
+            // Check for duplicate registration numbers
+            for (int i = 0; i < planeCount; i++) {
+                if (planes[i].getRegistrationNumber().equalsIgnoreCase(regNumber)) {
+                    throw new ValidationException("A plane with this registration number already exists");
+                }
+            }
+
+            planes[planeCount] = TransportFactory.createPlane(model, regNumber);
+            planeCount++;
+            menu.showMessage("Plane added successfully!");
+        } catch (ValidationException e) {
+            menu.showMessage("Error: " + e.getMessage());
+        }
     }
 
     private static void viewAllPlanes() {
         if (planeCount == 0) {
-            System.out.println("No planes registered yet.");
+            menu.showMessage("No planes registered yet.");
             return;
         }
 
-        System.out.println("\nRegistered Planes:");
+        StringBuilder message = new StringBuilder("Registered Planes:\n\n");
         for (int i = 0; i < planeCount; i++) {
-            System.out.println(planes[i]);
+            message.append(planes[i].toString()).append("\n");
         }
+        menu.showMessage(message.toString());
     }
 
     private static void searchPlane() {
-        System.out.print("Enter plane model or registration number: ");
-        String search = scanner.nextLine().toLowerCase();
+        String search = menu.readInput("Enter plane model or registration number: ");
         boolean found = false;
+        StringBuilder results = new StringBuilder("Search Results:\n\n");
 
         for (int i = 0; i < planeCount; i++) {
-            if (planes[i].getModel().toLowerCase().contains(search) || 
-                planes[i].getRegistrationNumber().toLowerCase().contains(search)) {
-                System.out.println(planes[i]);
+            if (planes[i].getModel().toLowerCase().contains(search.toLowerCase()) || 
+                planes[i].getRegistrationNumber().toLowerCase().contains(search.toLowerCase())) {
+                results.append(planes[i].toString()).append("\n");
                 found = true;
             }
         }
 
         if (!found) {
-            System.out.println("No matching planes found.");
+            menu.showMessage("No matching planes found.");
+        } else {
+            menu.showMessage(results.toString());
         }
     }
 
     private static void deletePlane() {
-        System.out.print("Enter plane ID to delete: ");
         try {
-            int id = Integer.parseInt(scanner.nextLine());
+            int id = Integer.parseInt(menu.readInput("Enter plane ID to delete: "));
             int index = -1;
 
             for (int i = 0; i < planeCount; i++) {
@@ -232,66 +247,79 @@ public class Main {
                     planes[i] = planes[i + 1];
                 }
                 planeCount--;
-                System.out.println("Plane deleted successfully!");
+                menu.showMessage("Plane deleted successfully!");
             } else {
-                System.out.println("Plane not found!");
+                menu.showMessage("Plane not found!");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
-    // Pilot management methods
     private static void addPilot() {
         if (pilotCount >= MAX_PILOTS) {
-            System.out.println("Maximum number of pilots reached!");
+            menu.showMessage("Maximum number of pilots reached!");
             return;
         }
 
-        System.out.print("Enter pilot name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter license number: ");
-        String license = scanner.nextLine();
+        try {
+            String name = menu.readInput("Enter pilot name: ");
+            Validator.validateName(name);
 
-        pilots[pilotCount] = new Pilot(pilotCount + 1, name, license);
-        pilotCount++;
-        System.out.println("Pilot added successfully!");
+            String license = menu.readInput("Enter license number: ");
+            Validator.validateLicenseNumber(license);
+
+            // Check for duplicate license numbers
+            for (int i = 0; i < pilotCount; i++) {
+                if (pilots[i].getLicenseNumber().equalsIgnoreCase(license)) {
+                    throw new ValidationException("A pilot with this license number already exists");
+                }
+            }
+
+            pilots[pilotCount] = TransportFactory.createPilot(name, license);
+            pilotCount++;
+            menu.showMessage("Pilot added successfully!");
+        } catch (ValidationException e) {
+            menu.showMessage("Error: " + e.getMessage());
+        }
     }
 
     private static void viewAllPilots() {
         if (pilotCount == 0) {
-            System.out.println("No pilots registered yet.");
+            menu.showMessage("No pilots registered yet.");
             return;
         }
 
-        System.out.println("\nRegistered Pilots:");
+        StringBuilder message = new StringBuilder("Registered Pilots:\n\n");
         for (int i = 0; i < pilotCount; i++) {
-            System.out.println(pilots[i]);
+            message.append(pilots[i].toString()).append("\n");
         }
+        menu.showMessage(message.toString());
     }
 
     private static void searchPilot() {
-        System.out.print("Enter pilot name or license number: ");
-        String search = scanner.nextLine().toLowerCase();
+        String search = menu.readInput("Enter pilot name or license number: ");
         boolean found = false;
+        StringBuilder results = new StringBuilder("Search Results:\n\n");
 
         for (int i = 0; i < pilotCount; i++) {
-            if (pilots[i].getName().toLowerCase().contains(search) || 
-                pilots[i].getLicenseNumber().toLowerCase().contains(search)) {
-                System.out.println(pilots[i]);
+            if (pilots[i].getName().toLowerCase().contains(search.toLowerCase()) || 
+                pilots[i].getLicenseNumber().toLowerCase().contains(search.toLowerCase())) {
+                results.append(pilots[i].toString()).append("\n");
                 found = true;
             }
         }
 
         if (!found) {
-            System.out.println("No matching pilots found.");
+            menu.showMessage("No matching pilots found.");
+        } else {
+            menu.showMessage(results.toString());
         }
     }
 
     private static void deletePilot() {
-        System.out.print("Enter pilot ID to delete: ");
         try {
-            int id = Integer.parseInt(scanner.nextLine());
+            int id = Integer.parseInt(menu.readInput("Enter pilot ID to delete: "));
             int index = -1;
 
             for (int i = 0; i < pilotCount; i++) {
@@ -314,160 +342,150 @@ public class Main {
                     pilots[i] = pilots[i + 1];
                 }
                 pilotCount--;
-                System.out.println("Pilot deleted successfully!");
+                menu.showMessage("Pilot deleted successfully!");
             } else {
-                System.out.println("Pilot not found!");
+                menu.showMessage("Pilot not found!");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
-    // Assignment methods
     private static void assignPilotToPlane() {
-        System.out.print("Enter plane ID: ");
         try {
-            int planeId = Integer.parseInt(scanner.nextLine());
-            System.out.print("Enter pilot ID: ");
-            int pilotId = Integer.parseInt(scanner.nextLine());
+            int planeId = Integer.parseInt(menu.readInput("Enter plane ID: "));
+            int pilotId = Integer.parseInt(menu.readInput("Enter pilot ID: "));
 
-            Plane plane = null;
-            Pilot pilot = null;
-
-            // Find plane and pilot
-            for (int i = 0; i < planeCount; i++) {
-                if (planes[i].getId() == planeId) {
-                    plane = planes[i];
-                    break;
-                }
-            }
-
-            for (int i = 0; i < pilotCount; i++) {
-                if (pilots[i].getId() == pilotId) {
-                    pilot = pilots[i];
-                    break;
-                }
-            }
+            Plane plane = findPlaneById(planeId);
+            Pilot pilot = findPilotById(pilotId);
 
             if (plane != null && pilot != null) {
                 plane.setPilotId(pilotId);
-                System.out.println("Pilot assigned to plane successfully!");
+                menu.showMessage("Pilot assigned to plane successfully!");
             } else {
-                System.out.println("Plane or pilot not found!");
+                menu.showMessage("Plane or pilot not found!");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
     private static void viewPlanePilot() {
-        System.out.print("Enter plane ID: ");
         try {
-            int planeId = Integer.parseInt(scanner.nextLine());
-            Plane plane = null;
+            int planeId = Integer.parseInt(menu.readInput("Enter plane ID: "));
+            Plane plane = findPlaneById(planeId);
             
-            for (int i = 0; i < planeCount; i++) {
-                if (planes[i].getId() == planeId) {
-                    plane = planes[i];
-                    break;
-                }
-            }
-
             if (plane != null) {
                 int pilotId = plane.getPilotId();
                 if (pilotId != -1) {
-                    for (int i = 0; i < pilotCount; i++) {
-                        if (pilots[i].getId() == pilotId) {
-                            System.out.println("Assigned pilot: " + pilots[i]);
-                            return;
-                        }
+                    Pilot pilot = findPilotById(pilotId);
+                    if (pilot != null) {
+                        menu.showMessage("Assigned pilot: " + pilot);
+                        return;
                     }
                 }
-                System.out.println("No pilot assigned to this plane.");
+                menu.showMessage("No pilot assigned to this plane.");
             } else {
-                System.out.println("Plane not found!");
+                menu.showMessage("Plane not found!");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
+    private static Pilot findPilotById(int id) {
+        for (int i = 0; i < pilotCount; i++) {
+            if (pilots[i].getId() == id) {
+                return pilots[i];
+            }
+        }
+        return null;
+    }
+
     private static void addPassengerToPlane() {
-        System.out.print("Enter plane ID: ");
         try {
-            int planeId = Integer.parseInt(scanner.nextLine());
+            int planeId = Integer.parseInt(menu.readInput("Enter plane ID: "));
             Plane plane = findPlaneById(planeId);
 
             if (plane == null) {
-                System.out.println("Plane not found!");
+                menu.showMessage("Plane not found!");
                 return;
             }
 
-            System.out.print("Enter passenger name: ");
-            String name = scanner.nextLine();
-            System.out.print("Enter passport number: ");
-            String passportNumber = scanner.nextLine();
-            System.out.print("Enter seat number: ");
-            String seatNumber = scanner.nextLine();
+            String name = menu.readInput("Enter passenger name: ");
+            Validator.validateName(name);
 
-            Passenger passenger = new Passenger(nextPassengerId++, name, passportNumber, seatNumber);
+            String passportNumber = menu.readInput("Enter passport number: ");
+            Validator.validatePassportNumber(passportNumber);
+
+            // Check for duplicate passport numbers on the same plane
+            for (Passenger existingPassenger : plane.getPassengers()) {
+                if (existingPassenger.getPassportNumber().equalsIgnoreCase(passportNumber)) {
+                    throw new ValidationException("A passenger with this passport number is already on this plane");
+                }
+            }
+
+            String seatNumber = menu.readInput("Enter seat number: ");
+            Validator.validateSeatNumber(seatNumber, plane);
+
+            Passenger passenger = TransportFactory.createPassenger(name, passportNumber, seatNumber);
             if (plane.addPassenger(passenger)) {
-                System.out.println("Passenger added successfully!");
+                menu.showMessage("Passenger added successfully!");
             } else {
-                System.out.println("Plane is full! Cannot add more passengers.");
+                menu.showMessage("Plane is full! Cannot add more passengers.");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
+        } catch (ValidationException e) {
+            menu.showMessage("Error: " + e.getMessage());
         }
     }
 
     private static void viewPlanePassengers() {
-        System.out.print("Enter plane ID: ");
         try {
-            int planeId = Integer.parseInt(scanner.nextLine());
+            int planeId = Integer.parseInt(menu.readInput("Enter plane ID: "));
             Plane plane = findPlaneById(planeId);
 
             if (plane == null) {
-                System.out.println("Plane not found!");
+                menu.showMessage("Plane not found!");
                 return;
             }
 
             Passenger[] passengers = plane.getPassengers();
             if (passengers.length == 0) {
-                System.out.println("No passengers on this plane.");
+                menu.showMessage("No passengers on this plane.");
                 return;
             }
 
-            System.out.println("\nPassengers on plane " + planeId + ":");
+            StringBuilder message = new StringBuilder("Passengers on plane " + planeId + ":\n\n");
             for (Passenger passenger : passengers) {
-                System.out.println(passenger);
+                message.append(passenger.toString()).append("\n");
             }
+            menu.showMessage(message.toString());
         } catch (NumberFormatException e) {
-            System.out.println("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
     private static void removePassengerFromPlane() {
-        System.out.print("Enter plane ID: ");
         try {
-            int planeId = Integer.parseInt(scanner.nextLine());
+            int planeId = Integer.parseInt(menu.readInput("Enter plane ID: "));
             Plane plane = findPlaneById(planeId);
 
             if (plane == null) {
-                System.out.println("Plane not found!");
+                menu.showMessage("Plane not found!");
                 return;
             }
 
-            System.out.print("Enter passenger ID to remove: ");
-            int passengerId = Integer.parseInt(scanner.nextLine());
+            int passengerId = Integer.parseInt(menu.readInput("Enter passenger ID to remove: "));
 
             if (plane.removePassenger(passengerId)) {
-                System.out.println("Passenger removed successfully!");
+                menu.showMessage("Passenger removed successfully!");
             } else {
-                System.out.println("Passenger not found on this plane!");
+                menu.showMessage("Passenger not found on this plane!");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
@@ -478,13 +496,5 @@ public class Main {
             }
         }
         return null;
-    }
-
-    private static int getUserChoice() {
-        try {
-            return Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            return -1;
-        }
     }
 } 
