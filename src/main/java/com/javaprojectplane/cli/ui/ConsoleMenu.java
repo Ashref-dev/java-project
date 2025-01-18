@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Stack;
 
 public class ConsoleMenu {
+    private static ConsoleMenu instance;
+    private final BufferedReader reader;
+    private final Stack<String> menuPath;
+
+    // ANSI color codes
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_BLUE = "\u001B[34m";
     private static final String ANSI_GREEN = "\u001B[32m";
@@ -14,10 +19,22 @@ public class ConsoleMenu {
     private static final String ANSI_CYAN = "\u001B[36m";
     private static final String ANSI_RED = "\u001B[31m";
     private static final String CLEAR_SCREEN = "\033[H\033[2J";
-    private static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    private static Stack<String> menuPath = new Stack<>();
 
-    public static void showWelcomeScreen() {
+    // Private constructor for Singleton
+    private ConsoleMenu() {
+        reader = new BufferedReader(new InputStreamReader(System.in));
+        menuPath = new Stack<>();
+    }
+
+    // Singleton getInstance method
+    public static ConsoleMenu getInstance() {
+        if (instance == null) {
+            instance = new ConsoleMenu();
+        }
+        return instance;
+    }
+
+    public void showWelcomeScreen() {
         clearScreen();
         System.out.println(ANSI_RED + """
             ╔════════════════════════════════════════════╗
@@ -33,7 +50,7 @@ public class ConsoleMenu {
         }
     }
 
-    public static int showMenu(String title, List<String> options) {
+    public int showMenu(String title, List<String> options) {
         int selectedIndex = 0;
         boolean choosing = true;
 
@@ -112,7 +129,7 @@ public class ConsoleMenu {
         return selectedIndex;
     }
 
-    public static String readInput(String prompt) {
+    public String readInput(String prompt) {
         // Show current location before input prompt
         System.out.println(ANSI_CYAN + "Location: " + String.join(" > ", menuPath) + ANSI_RESET);
         System.out.println();
@@ -126,7 +143,7 @@ public class ConsoleMenu {
         }
     }
 
-    public static void showMessage(String message) {
+    public void showMessage(String message) {
         // Show current location before message
         System.out.println(ANSI_CYAN + "Location: " + String.join(" > ", menuPath) + ANSI_RESET);
         System.out.println();
@@ -140,12 +157,12 @@ public class ConsoleMenu {
         }
     }
 
-    public static void clearScreen() {
+    public void clearScreen() {
         System.out.print(CLEAR_SCREEN);
         System.out.flush();
     }
 
-    public static void goBack() {
+    public void goBack() {
         if (!menuPath.isEmpty()) {
             menuPath.pop();
         }

@@ -3,6 +3,7 @@ package com.javaprojectplane.cli;
 import com.javaprojectplane.cli.validation.Validator;
 import com.javaprojectplane.cli.exceptions.ValidationException;
 import com.javaprojectplane.cli.ui.ConsoleMenu;
+import com.javaprojectplane.cli.factory.TransportFactory;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,9 +15,10 @@ public class Main {
     private static int planeCount = 0;
     private static int pilotCount = 0;
     private static int nextPassengerId = 1;
+    private static final ConsoleMenu menu = ConsoleMenu.getInstance();
 
     public static void main(String[] args) {
-        ConsoleMenu.showWelcomeScreen();
+        menu.showWelcomeScreen();
         
         while (true) {
             List<String> mainOptions = Arrays.asList(
@@ -27,7 +29,7 @@ public class Main {
                 "Exit"
             );
 
-            int choice = ConsoleMenu.showMenu("Plane Management System", mainOptions);
+            int choice = menu.showMenu("Plane Management System", mainOptions);
             
             switch (choice) {
                 case 0:
@@ -44,7 +46,7 @@ public class Main {
                     break;
                 case 4:
                 case -1:
-                    ConsoleMenu.showMessage("Exiting...");
+                    menu.showMessage("Exiting...");
                     return;
             }
         }
@@ -60,7 +62,7 @@ public class Main {
                 "Back to Main Menu"
             );
 
-            int choice = ConsoleMenu.showMenu("Manage Planes", options);
+            int choice = menu.showMenu("Manage Planes", options);
             
             switch (choice) {
                 case 0:
@@ -92,7 +94,7 @@ public class Main {
                 "Back to Main Menu"
             );
 
-            int choice = ConsoleMenu.showMenu("Manage Pilots", options);
+            int choice = menu.showMenu("Manage Pilots", options);
             
             switch (choice) {
                 case 0:
@@ -122,7 +124,7 @@ public class Main {
                 "Back to Main Menu"
             );
 
-            int choice = ConsoleMenu.showMenu("Plane-Pilot Assignment", options);
+            int choice = menu.showMenu("Plane-Pilot Assignment", options);
             
             switch (choice) {
                 case 0:
@@ -147,7 +149,7 @@ public class Main {
                 "Back to Main Menu"
             );
 
-            int choice = ConsoleMenu.showMenu("Manage Passengers", options);
+            int choice = menu.showMenu("Manage Passengers", options);
             
             switch (choice) {
                 case 0:
@@ -168,15 +170,15 @@ public class Main {
 
     private static void addPlane() {
         if (planeCount >= MAX_PLANES) {
-            ConsoleMenu.showMessage("Maximum number of planes reached!");
+            menu.showMessage("Maximum number of planes reached!");
             return;
         }
 
         try {
-            String model = ConsoleMenu.readInput("Enter plane model: ");
+            String model = menu.readInput("Enter plane model: ");
             Validator.validateName(model);
 
-            String regNumber = ConsoleMenu.readInput("Enter registration number: ");
+            String regNumber = menu.readInput("Enter registration number: ");
             Validator.validateRegistrationNumber(regNumber);
 
             // Check for duplicate registration numbers
@@ -186,17 +188,17 @@ public class Main {
                 }
             }
 
-            planes[planeCount] = new Plane(planeCount + 1, model, regNumber);
+            planes[planeCount] = TransportFactory.createPlane(model, regNumber);
             planeCount++;
-            ConsoleMenu.showMessage("Plane added successfully!");
+            menu.showMessage("Plane added successfully!");
         } catch (ValidationException e) {
-            ConsoleMenu.showMessage("Error: " + e.getMessage());
+            menu.showMessage("Error: " + e.getMessage());
         }
     }
 
     private static void viewAllPlanes() {
         if (planeCount == 0) {
-            ConsoleMenu.showMessage("No planes registered yet.");
+            menu.showMessage("No planes registered yet.");
             return;
         }
 
@@ -204,11 +206,11 @@ public class Main {
         for (int i = 0; i < planeCount; i++) {
             message.append(planes[i].toString()).append("\n");
         }
-        ConsoleMenu.showMessage(message.toString());
+        menu.showMessage(message.toString());
     }
 
     private static void searchPlane() {
-        String search = ConsoleMenu.readInput("Enter plane model or registration number: ");
+        String search = menu.readInput("Enter plane model or registration number: ");
         boolean found = false;
         StringBuilder results = new StringBuilder("Search Results:\n\n");
 
@@ -221,15 +223,15 @@ public class Main {
         }
 
         if (!found) {
-            ConsoleMenu.showMessage("No matching planes found.");
+            menu.showMessage("No matching planes found.");
         } else {
-            ConsoleMenu.showMessage(results.toString());
+            menu.showMessage(results.toString());
         }
     }
 
     private static void deletePlane() {
         try {
-            int id = Integer.parseInt(ConsoleMenu.readInput("Enter plane ID to delete: "));
+            int id = Integer.parseInt(menu.readInput("Enter plane ID to delete: "));
             int index = -1;
 
             for (int i = 0; i < planeCount; i++) {
@@ -245,26 +247,26 @@ public class Main {
                     planes[i] = planes[i + 1];
                 }
                 planeCount--;
-                ConsoleMenu.showMessage("Plane deleted successfully!");
+                menu.showMessage("Plane deleted successfully!");
             } else {
-                ConsoleMenu.showMessage("Plane not found!");
+                menu.showMessage("Plane not found!");
             }
         } catch (NumberFormatException e) {
-            ConsoleMenu.showMessage("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
     private static void addPilot() {
         if (pilotCount >= MAX_PILOTS) {
-            ConsoleMenu.showMessage("Maximum number of pilots reached!");
+            menu.showMessage("Maximum number of pilots reached!");
             return;
         }
 
         try {
-            String name = ConsoleMenu.readInput("Enter pilot name: ");
+            String name = menu.readInput("Enter pilot name: ");
             Validator.validateName(name);
 
-            String license = ConsoleMenu.readInput("Enter license number: ");
+            String license = menu.readInput("Enter license number: ");
             Validator.validateLicenseNumber(license);
 
             // Check for duplicate license numbers
@@ -274,17 +276,17 @@ public class Main {
                 }
             }
 
-            pilots[pilotCount] = new Pilot(pilotCount + 1, name, license);
+            pilots[pilotCount] = TransportFactory.createPilot(name, license);
             pilotCount++;
-            ConsoleMenu.showMessage("Pilot added successfully!");
+            menu.showMessage("Pilot added successfully!");
         } catch (ValidationException e) {
-            ConsoleMenu.showMessage("Error: " + e.getMessage());
+            menu.showMessage("Error: " + e.getMessage());
         }
     }
 
     private static void viewAllPilots() {
         if (pilotCount == 0) {
-            ConsoleMenu.showMessage("No pilots registered yet.");
+            menu.showMessage("No pilots registered yet.");
             return;
         }
 
@@ -292,11 +294,11 @@ public class Main {
         for (int i = 0; i < pilotCount; i++) {
             message.append(pilots[i].toString()).append("\n");
         }
-        ConsoleMenu.showMessage(message.toString());
+        menu.showMessage(message.toString());
     }
 
     private static void searchPilot() {
-        String search = ConsoleMenu.readInput("Enter pilot name or license number: ");
+        String search = menu.readInput("Enter pilot name or license number: ");
         boolean found = false;
         StringBuilder results = new StringBuilder("Search Results:\n\n");
 
@@ -309,15 +311,15 @@ public class Main {
         }
 
         if (!found) {
-            ConsoleMenu.showMessage("No matching pilots found.");
+            menu.showMessage("No matching pilots found.");
         } else {
-            ConsoleMenu.showMessage(results.toString());
+            menu.showMessage(results.toString());
         }
     }
 
     private static void deletePilot() {
         try {
-            int id = Integer.parseInt(ConsoleMenu.readInput("Enter pilot ID to delete: "));
+            int id = Integer.parseInt(menu.readInput("Enter pilot ID to delete: "));
             int index = -1;
 
             for (int i = 0; i < pilotCount; i++) {
@@ -340,37 +342,37 @@ public class Main {
                     pilots[i] = pilots[i + 1];
                 }
                 pilotCount--;
-                ConsoleMenu.showMessage("Pilot deleted successfully!");
+                menu.showMessage("Pilot deleted successfully!");
             } else {
-                ConsoleMenu.showMessage("Pilot not found!");
+                menu.showMessage("Pilot not found!");
             }
         } catch (NumberFormatException e) {
-            ConsoleMenu.showMessage("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
     private static void assignPilotToPlane() {
         try {
-            int planeId = Integer.parseInt(ConsoleMenu.readInput("Enter plane ID: "));
-            int pilotId = Integer.parseInt(ConsoleMenu.readInput("Enter pilot ID: "));
+            int planeId = Integer.parseInt(menu.readInput("Enter plane ID: "));
+            int pilotId = Integer.parseInt(menu.readInput("Enter pilot ID: "));
 
             Plane plane = findPlaneById(planeId);
             Pilot pilot = findPilotById(pilotId);
 
             if (plane != null && pilot != null) {
                 plane.setPilotId(pilotId);
-                ConsoleMenu.showMessage("Pilot assigned to plane successfully!");
+                menu.showMessage("Pilot assigned to plane successfully!");
             } else {
-                ConsoleMenu.showMessage("Plane or pilot not found!");
+                menu.showMessage("Plane or pilot not found!");
             }
         } catch (NumberFormatException e) {
-            ConsoleMenu.showMessage("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
     private static void viewPlanePilot() {
         try {
-            int planeId = Integer.parseInt(ConsoleMenu.readInput("Enter plane ID: "));
+            int planeId = Integer.parseInt(menu.readInput("Enter plane ID: "));
             Plane plane = findPlaneById(planeId);
             
             if (plane != null) {
@@ -378,16 +380,16 @@ public class Main {
                 if (pilotId != -1) {
                     Pilot pilot = findPilotById(pilotId);
                     if (pilot != null) {
-                        ConsoleMenu.showMessage("Assigned pilot: " + pilot);
+                        menu.showMessage("Assigned pilot: " + pilot);
                         return;
                     }
                 }
-                ConsoleMenu.showMessage("No pilot assigned to this plane.");
+                menu.showMessage("No pilot assigned to this plane.");
             } else {
-                ConsoleMenu.showMessage("Plane not found!");
+                menu.showMessage("Plane not found!");
             }
         } catch (NumberFormatException e) {
-            ConsoleMenu.showMessage("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
@@ -402,18 +404,18 @@ public class Main {
 
     private static void addPassengerToPlane() {
         try {
-            int planeId = Integer.parseInt(ConsoleMenu.readInput("Enter plane ID: "));
+            int planeId = Integer.parseInt(menu.readInput("Enter plane ID: "));
             Plane plane = findPlaneById(planeId);
 
             if (plane == null) {
-                ConsoleMenu.showMessage("Plane not found!");
+                menu.showMessage("Plane not found!");
                 return;
             }
 
-            String name = ConsoleMenu.readInput("Enter passenger name: ");
+            String name = menu.readInput("Enter passenger name: ");
             Validator.validateName(name);
 
-            String passportNumber = ConsoleMenu.readInput("Enter passport number: ");
+            String passportNumber = menu.readInput("Enter passport number: ");
             Validator.validatePassportNumber(passportNumber);
 
             // Check for duplicate passport numbers on the same plane
@@ -423,35 +425,35 @@ public class Main {
                 }
             }
 
-            String seatNumber = ConsoleMenu.readInput("Enter seat number: ");
+            String seatNumber = menu.readInput("Enter seat number: ");
             Validator.validateSeatNumber(seatNumber, plane);
 
-            Passenger passenger = new Passenger(nextPassengerId++, name, passportNumber, seatNumber);
+            Passenger passenger = TransportFactory.createPassenger(name, passportNumber, seatNumber);
             if (plane.addPassenger(passenger)) {
-                ConsoleMenu.showMessage("Passenger added successfully!");
+                menu.showMessage("Passenger added successfully!");
             } else {
-                ConsoleMenu.showMessage("Plane is full! Cannot add more passengers.");
+                menu.showMessage("Plane is full! Cannot add more passengers.");
             }
         } catch (NumberFormatException e) {
-            ConsoleMenu.showMessage("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         } catch (ValidationException e) {
-            ConsoleMenu.showMessage("Error: " + e.getMessage());
+            menu.showMessage("Error: " + e.getMessage());
         }
     }
 
     private static void viewPlanePassengers() {
         try {
-            int planeId = Integer.parseInt(ConsoleMenu.readInput("Enter plane ID: "));
+            int planeId = Integer.parseInt(menu.readInput("Enter plane ID: "));
             Plane plane = findPlaneById(planeId);
 
             if (plane == null) {
-                ConsoleMenu.showMessage("Plane not found!");
+                menu.showMessage("Plane not found!");
                 return;
             }
 
             Passenger[] passengers = plane.getPassengers();
             if (passengers.length == 0) {
-                ConsoleMenu.showMessage("No passengers on this plane.");
+                menu.showMessage("No passengers on this plane.");
                 return;
             }
 
@@ -459,31 +461,31 @@ public class Main {
             for (Passenger passenger : passengers) {
                 message.append(passenger.toString()).append("\n");
             }
-            ConsoleMenu.showMessage(message.toString());
+            menu.showMessage(message.toString());
         } catch (NumberFormatException e) {
-            ConsoleMenu.showMessage("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
     private static void removePassengerFromPlane() {
         try {
-            int planeId = Integer.parseInt(ConsoleMenu.readInput("Enter plane ID: "));
+            int planeId = Integer.parseInt(menu.readInput("Enter plane ID: "));
             Plane plane = findPlaneById(planeId);
 
             if (plane == null) {
-                ConsoleMenu.showMessage("Plane not found!");
+                menu.showMessage("Plane not found!");
                 return;
             }
 
-            int passengerId = Integer.parseInt(ConsoleMenu.readInput("Enter passenger ID to remove: "));
+            int passengerId = Integer.parseInt(menu.readInput("Enter passenger ID to remove: "));
 
             if (plane.removePassenger(passengerId)) {
-                ConsoleMenu.showMessage("Passenger removed successfully!");
+                menu.showMessage("Passenger removed successfully!");
             } else {
-                ConsoleMenu.showMessage("Passenger not found on this plane!");
+                menu.showMessage("Passenger not found on this plane!");
             }
         } catch (NumberFormatException e) {
-            ConsoleMenu.showMessage("Invalid ID format!");
+            menu.showMessage("Invalid ID format!");
         }
     }
 
