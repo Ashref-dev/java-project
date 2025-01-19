@@ -1,6 +1,17 @@
 # Project Idea: **Plane Management System (CLI-based)**
 A basic command-line interface application with a menu system.
 
+### System Design Diagrams
+Below are the UML diagrams that illustrate the system's architecture, interactions, and structure:
+
+1. **Class Diagram**: Shows the relationships between different classes in the system
+![Class Diagram](Class.jpg)
+
+2. **Use Case Diagram**: Illustrates the possible interactions between users and the system
+![Use Case Diagram](UseCase.jpg)
+
+3. **Sequence Diagram**: Demonstrates the flow of operations for pilot assignment
+![Sequence Diagram](Sequence.jpg)
 
 ## Project Structure
 
