@@ -99,6 +99,26 @@ Plane Management System:
 - Each `Plane` object maintains its own array of `Passenger` objects
 - Operations such as add, search, and delete will directly manipulate these arrays
 
+The data persistence and abstraction will be implemented in the next phase of the project.
+
+### Design Patterns Used:
+
+#### 1. **Singleton Pattern**:
+- Implemented in `ConsoleMenu` class
+- Ensures a single instance of the menu system throughout the application
+- Manages consistent UI state and user interaction
+
+#### 2. **Factory Pattern**:
+- Simple Factory implementation in `TransportFactory` class
+- Centralizes object creation for Planes, Pilots, and Passengers
+- Manages ID generation and instantiation logic
+
+#### 3. **Partial MVC Pattern**:
+- **Model**: Clear data models in `Plane`, `Pilot`, and `Passenger` classes
+- **View**: `ConsoleMenu` class handling all UI rendering and user input
+- **Controller**: Main class handling business logic and flow control
+- Note: While not a strict MVC implementation, the separation of concerns provides a foundation for future enhancements
+
 ---
 
 ### UML Diagrams:
