@@ -1,17 +1,7 @@
 # Project Idea: **Plane Management System (CLI-based)**
 A basic command-line interface application with a menu system.
 
-### System Design Diagrams
-Below are the UML diagrams that illustrate the system's architecture, interactions, and structure:
 
-1. **Class Diagram**: Shows the relationships between different classes in the system
-![Class Diagram](Class.jpg)
-
-2. **Use Case Diagram**: Illustrates the possible interactions between users and the system
-![Use Case Diagram](UseCase.jpg)
-
-3. **Sequence Diagram**: Demonstrates the flow of operations for pilot assignment
-![Sequence Diagram](Sequence.jpg)
 
 ## Project Structure
 
@@ -79,6 +69,20 @@ Plane Management System:
 
 ---
 
+### System Design Diagrams
+Below are the UML diagrams that illustrate the system's architecture, interactions, and structure:
+
+1. **Class Diagram**: Shows the relationships between different classes in the system
+![Class Diagram](Class.jpg)
+
+2. **Use Case Diagram**: Illustrates the possible interactions between users and the system
+![Use Case Diagram](UseCase.jpg)
+
+3. **Sequence Diagram**: Demonstrates the flow of operations for pilot assignment
+![Sequence Diagram](Sequence.jpg)
+
+---
+
 ### Implementation Details:
 
 #### Objects:
@@ -121,23 +125,9 @@ The data persistence and abstraction will be implemented in the next phase of th
 
 ---
 
-### UML Diagrams:
-1. **Use Case Diagram**:
-   - Actors: `User`.
-   - Use Cases: Add Plane, Add Pilot, Assign Pilot, Search Plane/Pilot, Delete Plane/Pilot.
-
-2. **Class Diagram**:
-   - Classes: `Plane`, `Pilot`, `PlaneManager`, `PilotManager`.
-
-3. **Sequence Diagram**:
-   - Example: Assigning a Pilot to a Plane.
-     - User selects "Assign Pilot" → System asks for plane ID and pilot ID → Updates `Plane` object with the pilot's ID.
-
----
-
 ### Tools:
 - **IDE**: IntelliJ IDEA, Eclipse, or VS Code.
-- **UML**: Use Lucidchart, StarUML, or any simple UML drawing tool.
+- **UML**: Lucidchart, StarUML.
 
 ---
 
@@ -149,4 +139,4 @@ The data persistence and abstraction will be implemented in the next phase of th
 
 ---
 
-This simple project focuses on objects (planes and pilots) and basic interactions via arrays, making it ideal for learning and demonstrating core Java skills.
+Thank you for your time and effort.
